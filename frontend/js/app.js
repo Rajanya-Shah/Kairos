@@ -1,5 +1,5 @@
-import { animateSendButton } from "./ui.js";
-import { renderContacts } from "./contacts.js";
+import { animateSendButton } from ".file:///C:/Users/SarbagyaShah/Downloads/codes/kairos/Kairos/frontend/js/ui.js";
+import { renderContacts } from ".file:///C:/Users/SarbagyaShah/Downloads/codes/kairos/Kairos/frontend/js/contacts.js";
 
 const sendBtn = document.getElementById("sendBtn");
 const msgInput = document.getElementById("msgInput");
