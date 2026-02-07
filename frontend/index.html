@@ -3,35 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Kairos</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar: Contacts -->
-    <div class="sidebar">
+  <div id="app" class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
       <h2>Kairos</h2>
-      <ul>
-        <li>User A</li>
-        <li>User B</li>
-        <li>User C</li>
-        <li>User D</li>
-      </ul>
-    </div>
+      <ul id="contactList"></ul>
+      <button id="addContactBtn">+ Add Contact</button>
+    </aside>
 
-
-    <!-- Chat Window -->
-    <div class="chat">
-      <div class="chat-header">Chat with User B</div>
-      <div class="messages" id="messages">
-        <div class="message sender">User A: Hello!</div>
-        <div class="message receiver">User B: Hi :)</div>
-      </div>
-      <div class="input-area">
+    <!-- Main Panel -->
+    <main class="main">
+      <header class="chat-header">
+        <span id="chatTitle">Select a contact</span>
+      </header>
+      <section class="messages" id="messages"></section>
+      <footer class="input-area">
         <input type="text" id="msgInput" placeholder="Type a message...">
         <button id="sendBtn">Send</button>
-      </div>
-    </div>
+      </footer>
+    </main>
   </div>
-  <script src="script.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/contacts.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
