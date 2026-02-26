@@ -15,6 +15,7 @@ body {
   box-shadow: 0 8px 24px rgba(0,0,0,0.6);
 }
 
+/* Sidebar */
 .sidebar {
   width: 25%;
   background: #1f1f1f;
@@ -50,6 +51,7 @@ body {
   font-weight: bold;
 }
 
+/* Main chat area */
 .main {
   flex: 1;
   display: flex;
@@ -99,6 +101,7 @@ body {
   font-size: 0.85em;
 }
 
+/* Input area */
 .input-area {
   display: flex;
   padding: 10px;
@@ -112,6 +115,7 @@ body {
   border: 1px solid #555;
   background: #2a2a2a;
   color: #eee;
+  outline: none;
 }
 
 .input-area button {
@@ -139,4 +143,29 @@ body {
 @keyframes fly {
   0% { transform: translateX(0) rotate(0deg); opacity: 1; }
   100% { transform: translateX(300px) rotate(45deg); opacity: 0; }
+}
+
+/* Typing indicator */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+  margin-left: 10px;
+}
+.typing.hidden { display: none; }
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #eee;
+  border-radius: 50%;
+  animation: bounce 1s infinite;
+}
+
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.8); }
+  40% { transform: scale(1.2); }
 }

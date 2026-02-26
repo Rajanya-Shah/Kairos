@@ -12,6 +12,8 @@ const contacts = [
   { id: "kairos003", name: "User C" }
 ];
 
+let activeContact = null;
+
 // Render contacts
 function renderContacts() {
   contactList.innerHTML = "";
@@ -21,17 +23,28 @@ function renderContacts() {
     li.addEventListener("click", () => {
       document.querySelectorAll(".sidebar li").forEach(el => el.classList.remove("active"));
       li.classList.add("active");
+      activeContact = contact;
       chatTitle.textContent = `Chat with ${contact.name}`;
+      messagesDiv.innerHTML = ""; // clear old messages
+      addDateSeparator();
     });
     contactList.appendChild(li);
   });
 }
 
-// Add message
-function addMessage(text, sender = "You") {
+// Add date separator
+function addDateSeparator() {
+  const separator = document.createElement("div");
+  separator.className = "date-separator";
+  separator.textContent = new Date().toLocaleDateString();
+  messagesDiv.appendChild(separator);
+}
+
+// Add message bubble
+function addMessage(text, sender = "You", status = "") {
   const newMsg = document.createElement("div");
   newMsg.className = sender === "You" ? "message sender" : "message receiver";
-  newMsg.textContent = `${sender}: ${text}`;
+  newMsg.textContent = `${sender}: ${text} ${status}`;
   messagesDiv.appendChild(newMsg);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
@@ -46,18 +59,32 @@ function animateSendButton() {
   setTimeout(() => plane.remove(), 1000);
 }
 
-// Events
-sendBtn.addEventListener("click", () => {
+// Fake auto-reply
+function autoReply() {
+  setTimeout(() => {
+    if (activeContact) {
+      addMessage("Got your message!", activeContact.name);
+    }
+  }, 1200);
+}
+
+// Handle sending
+function handleSend() {
   const text = msgInput.value.trim();
-  if (text !== "") {
-    addMessage(text, "You");
+  if (text !== "" && activeContact) {
+    addMessage(text, "You", "✓");
     msgInput.value = "";
     animateSendButton();
+    autoReply();
+  } else if (!activeContact) {
+    alert("Please select a contact first.");
   }
-});
+}
 
+// Events
+sendBtn.addEventListener("click", handleSend);
 msgInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendBtn.click();
+  if (e.key === "Enter") handleSend();
 });
 
 // Init
