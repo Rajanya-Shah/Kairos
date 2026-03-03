@@ -1,2 +1,0 @@
-# Kairos
-Simple messeing website
