@@ -145,7 +145,7 @@ switch ($action) {
     // ----------------------------------------------------------
     case 'list':
         $stmt = $db->prepare(
-            'SELECT u.id, u.username, u.avatar
+            'SELECT u.id, u.username, u.avatar, c.theme
              FROM contacts c
              JOIN users u ON u.id = CASE WHEN c.user_id_1 = ? THEN c.user_id_2 ELSE c.user_id_1 END
              WHERE c.user_id_1 = ? OR c.user_id_2 = ?

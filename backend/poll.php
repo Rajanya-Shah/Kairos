@@ -18,12 +18,13 @@ if (empty($_SESSION['user_id'])) {
 
 $me = (int)$_SESSION['user_id'];
 $afterMsgId = (int)($_GET['after_msg_id'] ?? 0);
+$activeContactId = (int)($_GET['active_contact_id'] ?? 0);
 $db = getDB();
 
 // ── 1. New messages received (across all conversations) ──────────
 $msgStmt = $db->prepare(
-    'SELECT m.id, m.sender_id, m.receiver_id, m.content, m.status, m.created_at,
-            u.username as sender_username
+    'SELECT m.id, m.sender_id, m.receiver_id, m.type, m.content, m.status, m.is_ephemeral, m.created_at,
+            u.username as sender_username, u.avatar as sender_avatar
      FROM messages m
      JOIN users u ON u.id = m.sender_id
      WHERE m.receiver_id = ?
@@ -63,8 +64,19 @@ if (!empty($newMessages)) {
     $maxId = max(array_column($newMessages, 'id'));
 }
 
+// ── 4. Typing status of active contact ──────────────────────────
+$isTypingToMe = false;
+if ($activeContactId > 0) {
+    $typeStmt = $db->prepare('SELECT id FROM users WHERE id = ? AND typing_to_id = ? AND last_typing >= DATE_SUB(NOW(), INTERVAL 3 SECOND)');
+    $typeStmt->execute([$activeContactId, $me]);
+    if ($typeStmt->fetch()) {
+        $isTypingToMe = true;
+    }
+}
+
 echo json_encode([
     'new_messages' => $newMessages,
     'friend_requests' => $friendRequests,
     'max_msg_id' => $maxId,
+    'is_typing' => $isTypingToMe
 ]);

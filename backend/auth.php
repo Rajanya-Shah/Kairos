@@ -85,9 +85,15 @@ switch ($action) {
             echo json_encode(['error' => 'Not authenticated.']);
             exit;
         }
+        $db = getDB();
+        $meStmt = $db->prepare('SELECT avatar FROM users WHERE id = ?');
+        $meStmt->execute([$_SESSION['user_id']]);
+        $meUser = $meStmt->fetch();
+
         echo json_encode([
             'id' => (int)$_SESSION['user_id'],
             'username' => $_SESSION['username'],
+            'avatar' => $meUser['avatar'] ?? null,
         ]);
         break;
 

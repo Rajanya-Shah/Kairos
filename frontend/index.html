@@ -122,10 +122,15 @@
             <!-- ── Chat Panel ───────────────────────────────── -->
             <main class="chat-panel" id="chat-panel">
 
-                <!-- Empty state -->
-                <div class="chat-empty" id="chat-empty">
-                    <p class="chat-empty-title">Select a conversation</p>
-                    <p class="chat-empty-sub">Choose a contact from the sidebar to begin.</p>
+                <!-- Inbox View (Replaces Empty State) -->
+                <div class="inbox-view" id="inbox-view">
+                    <div class="inbox-header">
+                        <h2 class="inbox-title">Conversations</h2>
+                        <p class="inbox-subtitle">Your private luxury space.</p>
+                    </div>
+                    <div class="inbox-list" id="inbox-list">
+                        <!-- Rendered by JS -->
+                    </div>
                 </div>
 
                 <!-- Active Chat -->
@@ -137,6 +142,17 @@
                         <div class="chat-header-info">
                             <span class="chat-header-name" id="chat-header-name"></span>
                             <span class="chat-header-status" id="chat-header-status">online</span>
+                        </div>
+                        <div class="chat-header-actions">
+                            <select id="chat-theme-select" class="theme-select" onchange="changeChatTheme(this.value)"
+                                title="Personalize Chat Theme">
+                                <option value="default">Midnight (Default)</option>
+                                <option value="amethyst">Amethyst</option>
+                                <option value="emerald">Emerald</option>
+                                <option value="obsidian">Obsidian</option>
+                                <option value="gold">Gold</option>
+                                <option value="crimson">Crimson</option>
+                            </select>
                         </div>
                     </div>
 
@@ -152,6 +168,25 @@
 
                     <!-- Input area -->
                     <div class="chat-input-area">
+                        <!-- Image Attachment Button -->
+                        <button class="icon-btn btn-attach" id="btn-attach"
+                            onclick="document.getElementById('image-upload-input').click()" title="Share Image">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </button>
+                        <input type="file" id="image-upload-input" accept="image/*" class="hidden"
+                            onchange="handleImageAttach(event)" />
+
+                        <div id="image-preview-container" class="image-preview-container hidden">
+                            <img id="image-preview-img" src="" alt="Preview" />
+                            <button class="btn-remove-image" onclick="removeImageAttach()">✕</button>
+                        </div>
+
+                        <!-- Whisper Mode -->
                         <button class="btn-whisper" id="btn-whisper" onclick="toggleWhisper()"
                             title="Whisper Mode (Blurred Text)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -161,9 +196,21 @@
                                 <line x1="3" y1="3" x2="21" y2="21" class="strike-line hidden" />
                             </svg>
                         </button>
+
+                        <!-- Burn Mode toggle -->
+                        <button class="btn-burn" id="btn-burn" onclick="toggleBurnMode()"
+                            title="Burn Mode (Message destroys in 10s)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                            </svg>
+                        </button>
+
                         <textarea id="message-input" class="message-input" placeholder="Write something…" rows="1"
                             onkeydown="handleInputKeydown(event)"
                             oninput="autoResizeTextarea(this); handleTyping();"></textarea>
+
                         <button class="btn-send" id="btn-send" onclick="sendMessage()" title="Send">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -220,14 +267,30 @@
                 <h2 class="panel-title">Profile</h2>
                 <button class="modal-close" onclick="closeSettings()">✕</button>
             </div>
-            <div class="panel-avatar-wrap">
+            <div class="panel-avatar-wrap" onclick="document.getElementById('avatar-upload-input').click()"
+                title="Click to change avatar">
                 <div class="panel-avatar" id="panel-avatar-display"></div>
+                <div class="avatar-upload-overlay">
+                    <span>Edit</span>
+                </div>
+            </div>
+            <input type="file" id="avatar-upload-input" class="hidden" accept="image/*"
+                onchange="uploadAvatar(event)" />
+            <div class="panel-username-wrap">
                 <p class="panel-username" id="panel-username-display"></p>
             </div>
             <div class="panel-actions">
                 <button class="btn-secondary" onclick="handleLogout()">Sign Out</button>
             </div>
         </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+       LIGHTBOX UI
+  ═══════════════════════════════════════════════════════════ -->
+    <div id="lightbox-overlay" class="lightbox-overlay hidden" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="closeLightbox(event)">✕</button>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Full Screen Image" />
     </div>
 
     <script src="script.js"></script>

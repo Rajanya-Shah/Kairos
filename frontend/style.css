@@ -1388,3 +1388,377 @@ body.focus-mode .chat-header {
         transform: translateX(0);
     }
 }
+
+/* ── 15. INBOX VIEW (Home State) ──────────────────────────────── */
+.inbox-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-base);
+    padding: 40px 60px;
+    overflow-y: auto;
+    animation: fadeIn var(--slow) var(--ease);
+}
+
+.inbox-header {
+    margin-bottom: 40px;
+}
+
+.inbox-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--metal-bright), var(--metal-dim));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.inbox-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.inbox-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.inbox-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--metal-line);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--mid) var(--ease);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Luxury Hover Effect */
+.inbox-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(124, 111, 205, 0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--mid) var(--ease);
+}
+
+.inbox-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 111, 205, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(124, 111, 205, 0.1);
+}
+
+.inbox-card:hover::before {
+    opacity: 1;
+}
+
+.inbox-card-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.inbox-card-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--metal-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--metal-mid);
+    overflow: hidden;
+}
+
+.inbox-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.inbox-card-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.inbox-card-preview {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.inbox-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--metal-line);
+}
+
+.inbox-card-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.inbox-card-unread {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── 16. IMAGE SHARING & LIGHTBOX ──────────────────────────── */
+.msg-bubble img {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    display: block;
+    cursor: zoom-in;
+    transition: transform var(--fast) var(--ease);
+}
+
+.msg-bubble img:hover {
+    transform: scale(1.02);
+}
+
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 6, 8, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--mid) var(--ease);
+}
+
+.lightbox-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.lightbox-img {
+    max-width: 90%;
+    max-height: 85%;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+    transform: scale(0.95);
+    transition: transform var(--mid) var(--ease-back);
+}
+
+.lightbox-overlay.active .lightbox-img {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--fast);
+}
+
+.lightbox-close:hover {
+    opacity: 1;
+}
+
+.image-preview-container {
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    padding: 10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--metal-line);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: fadeIn var(--fast) var(--ease);
+}
+
+.image-preview-container img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.btn-remove-image {
+    background: var(--bg-surface);
+    border: 1px solid var(--metal-line);
+    color: var(--text-muted);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+/* ── 17. BURN MESSAGES ─────────────────────────────────────── */
+.msg-bubble.burn {
+    border: 1px dashed var(--accent-purple);
+    position: relative;
+    overflow: hidden;
+}
+
+.burn-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: var(--accent-purple);
+    font-weight: 700;
+    margin-left: 8px;
+    padding: 2px 6px;
+    background: rgba(124, 111, 205, 0.1);
+    border-radius: 4px;
+    animation: glowText 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowText {
+    from {
+        opacity: 0.6;
+    }
+
+    to {
+        opacity: 1;
+        text-shadow: 0 0 8px var(--accent-glow);
+    }
+}
+
+.btn-burn.active {
+    color: var(--accent-purple);
+    border-color: var(--accent-purple);
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── 18. AVATAR UPLOAD ─────────────────────────────────────── */
+.panel-avatar-wrap {
+    position: relative;
+    cursor: pointer;
+}
+
+.avatar-upload-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--fast);
+    border-radius: 50%;
+}
+
+.panel-avatar-wrap:hover .avatar-upload-overlay {
+    opacity: 1;
+}
+
+.avatar-upload-overlay span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--bg-void);
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--metal-line);
+}
+
+.contact-avatar img,
+.chat-header-avatar img,
+.panel-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* ── 19. PERSONALIZED THEMES ───────────────────────────────── */
+.theme-select {
+    background: var(--bg-elevated);
+    border: 1px solid var(--metal-line);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Theme overrides */
+body.theme-amethyst {
+    --accent-purple: #9D8FE0;
+    --accent-glow: rgba(157, 143, 224, 0.25);
+}
+
+body.theme-emerald {
+    --accent-purple: #6BA892;
+    --accent-glow: rgba(107, 168, 146, 0.25);
+}
+
+body.theme-obsidian {
+    --accent-purple: #4A4A5A;
+    --accent-glow: rgba(74, 74, 90, 0.25);
+}
+
+body.theme-gold {
+    --accent-purple: #C9A96E;
+    --accent-glow: rgba(201, 169, 110, 0.25);
+}
+
+body.theme-crimson {
+    --accent-purple: #BF7878;
+    --accent-glow: rgba(191, 120, 120, 0.25);
+}
+
+/* Apply to bubbles when active */
+.message-row.sent.theme-active .msg-bubble {
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--accent-rgb), 0.05));
+    border-color: rgba(var(--accent-rgb), 0.3);
+}
+
+/* Responsive Inbox */
+@media (max-width: 768px) {
+    .inbox-view {
+        padding: 20px;
+    }
+
+    .inbox-list {
+        grid-template-columns: 1fr;
+    }
+}

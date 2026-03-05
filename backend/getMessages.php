@@ -42,9 +42,17 @@ if (!$check->fetch()) {
 
 // Mark messages sent TO me by this contact as "seen"
 $db->prepare(
-    'UPDATE messages SET status = "seen"
+    'UPDATE messages SET status = "seen", seen_at = CURRENT_TIMESTAMP
      WHERE sender_id = ? AND receiver_id = ? AND status != "seen"'
 )->execute([$contactId, $me]);
+
+// Delete expired ephemeral messages
+$db->exec(
+    'DELETE FROM messages 
+     WHERE is_ephemeral = 1 
+       AND seen_at IS NOT NULL 
+       AND TIMESTAMPDIFF(SECOND, seen_at, CURRENT_TIMESTAMP) >= 10'
+);
 
 // Fetch messages
 if ($after > 0) {
