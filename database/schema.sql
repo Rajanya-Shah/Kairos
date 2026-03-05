@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     username      VARCHAR(50)  NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     avatar        VARCHAR(255) DEFAULT NULL,
+    typing_to_id  INT UNSIGNED DEFAULT NULL,
+    last_typing   TIMESTAMP    NULL DEFAULT NULL,
     created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -37,6 +39,7 @@ CREATE TABLE IF NOT EXISTS contacts (
     id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id_1      INT UNSIGNED NOT NULL,
     user_id_2      INT UNSIGNED NOT NULL,
+    theme          VARCHAR(50)  NOT NULL DEFAULT 'default',
     established_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id_1) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id_2) REFERENCES users(id) ON DELETE CASCADE,
@@ -50,8 +53,11 @@ CREATE TABLE IF NOT EXISTS messages (
     id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     sender_id   INT UNSIGNED NOT NULL,
     receiver_id INT UNSIGNED NOT NULL,
+    type        ENUM('text', 'image') NOT NULL DEFAULT 'text',
     content     TEXT         NOT NULL,
     status      ENUM('sent','delivered','seen') NOT NULL DEFAULT 'sent',
+    is_ephemeral BOOLEAN     NOT NULL DEFAULT FALSE,
+    seen_at     TIMESTAMP    NULL DEFAULT NULL,
     created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id)   REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
